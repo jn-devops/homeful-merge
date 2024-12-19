@@ -31,5 +31,7 @@ test('template model has a document attribute', function () {
     expect($template->document->file_name)->toBe('pdf-sample.pdf');
     expect($template->document->name)->toBe('document');
     expect($template->document->getUrl())->toBeUrl();
+    $template->document->delete();
+    $template->clearMediaCollection(Template::COLLECTION_NAME);
 });
 
