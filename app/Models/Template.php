@@ -33,7 +33,8 @@ class Template extends Model implements HasMedia
     protected $fillable = [
         'code',
         'name',
-        'url'
+        'url',
+        'data'
     ];
 
     public function fields(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

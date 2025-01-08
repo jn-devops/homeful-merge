@@ -25,9 +25,9 @@ class EditTemplate extends EditRecord
     }
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $record->document = $record->url;
         $record->update($data);
-        dd($record->document,$record->url);
+        $record->document = $record->url;
+
 
         return $record;
     }

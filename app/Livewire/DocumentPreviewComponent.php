@@ -52,7 +52,7 @@ class DocumentPreviewComponent extends Component
         if ($this->record){
             $mailmerge = new \Homeful\Mailmerge\Mailmerge();
             try{
-                $converted_path =$mailmerge->generateDocument(storage_path('app/public/test1.docx'), ['buyer_name' => 'sample name'], 'test', 'public', false);
+                $converted_path =$mailmerge->generateDocument(storage_path('app/public/test1.docx'), json_decode($this->record->data, true), 'test', 'public', false);
             }catch (\Exception $e){
                 dd($e);
             }
