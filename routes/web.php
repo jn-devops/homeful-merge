@@ -27,4 +27,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/download-template/{template}', DownloadTemplate::class)->name('download-template');
 });
 
+Route::get('/document-stream/{id}', function ($id) {
+    $record = \App\Models\Template::findOrFail($id);
+    $component = new \App\Livewire\DocumentPreviewComponent();
+    $component->record = $record;
+    return $component->streamPdf();
+})->name('document.stream');
+
 require __DIR__.'/auth.php';
