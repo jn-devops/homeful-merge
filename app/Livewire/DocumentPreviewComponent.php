@@ -49,12 +49,16 @@ class DocumentPreviewComponent extends Component
     public function streamPdf()
     {
 
+
         if ($this->record){
             $mailmerge = new \Homeful\Mailmerge\Mailmerge();
+
+//            dd($this->record->document->getPath(),storage_path('app/public/test1.docx'));
+
             try{
-                $converted_path =$mailmerge->generateDocument(storage_path('app/public/test1.docx'), json_decode($this->record->data, true), 'test', 'public', false);
+                $converted_path =$mailmerge->generateDocument($this->record->document->getPath(), json_decode($this->record->data, true), 'test', 'public', false);
             }catch (\Exception $e){
-                dd($e);
+                dd($e, $e->getMessage());
             }
 
             return response()->file($converted_path, [
