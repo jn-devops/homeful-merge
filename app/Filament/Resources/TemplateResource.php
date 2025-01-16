@@ -77,9 +77,11 @@ class TemplateResource extends Resource
                         Forms\Components\Repeater::make('fields')
                             ->relationship('fields', )
                             ->schema([
-                                TextInput::make('name'),
+                                TextInput::make('name')
+                                    ->required(),
                                 Forms\Components\Select::make('type')
                                 ->label('Type')
+                                    ->required()
                                 ->options([
                                     'Integer' => 'Integer',
                                     'String' => 'String',

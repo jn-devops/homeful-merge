@@ -2475,16 +2475,16 @@
         },
         {
             "name": "ggvivar/mailmerge",
-            "version": "v1.0.1",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jn-devops/mailmerge.git",
-                "reference": "7ded69f7b2e3a39fd3ea0f18eb5793b9224c7084"
+                "reference": "08fccf4988dd4dd62524eead955665e9a0eb5c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jn-devops/mailmerge/zipball/7ded69f7b2e3a39fd3ea0f18eb5793b9224c7084",
-                "reference": "7ded69f7b2e3a39fd3ea0f18eb5793b9224c7084",
+                "url": "https://api.github.com/repos/jn-devops/mailmerge/zipball/08fccf4988dd4dd62524eead955665e9a0eb5c09",
+                "reference": "08fccf4988dd4dd62524eead955665e9a0eb5c09",
                 "shasum": ""
             },
             "require": {
@@ -2542,7 +2542,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jn-devops/mailmerge/issues",
-                "source": "https://github.com/jn-devops/mailmerge/tree/v1.0.1"
+                "source": "https://github.com/jn-devops/mailmerge/tree/v1.0.3"
             },
             "funding": [
                 {
@@ -2550,7 +2550,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-15T09:37:41+00:00"
+            "time": "2025-01-16T07:52:10+00:00"
         },
         {
             "name": "giggsey/libphonenumber-for-php-lite",

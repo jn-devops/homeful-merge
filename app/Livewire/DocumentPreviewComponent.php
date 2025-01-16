@@ -2,18 +2,14 @@
 
 namespace App\Livewire;
 
-use App\Models\ClientInformations;
-use App\Models\Documents;
-use ConvertApi\ConvertApi;
+
 use Livewire\Component;
 use Illuminate\Database\Eloquent\Model;
 use PhpOffice\PhpWord\IOFactory;
-use Dompdf\Dompdf;
-use Dompdf\Options;
+
 use PhpOffice\PhpWord\TemplateProcessor;
 
 use PhpOffice\PhpWord\Settings;
-use setasign\Fpdi\TcpdfFpdi;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\File;
@@ -39,6 +35,21 @@ class DocumentPreviewComponent extends Component
             if (!File::exists(storage_path('app/public/converted_pdf/'))) {
                 File::makeDirectory(storage_path('app/public/converted_pdf/'), 0755, true);
             }
+//            $mailmerge = new \Homeful\Mailmerge\Mailmerge();
+//
+////            dd($this->record->document->getPath(),storage_path('app/public/test1.docx'));
+////            dd(pathinfo($this->record->document->getPath(), PATHINFO_FILENAME));
+//            try{
+//                $converted_path =$mailmerge->generateDocument($this->record->document->getPath(),
+//                    json_decode($this->record->data, true)??[],
+//                    pathinfo($this->record->document->getPath(), PATHINFO_FILENAME),
+//                    'public',
+//                    false);
+//
+////                dd($converted_path);
+//            }catch (\Exception $e){
+//                dd($e, $e->getMessage());
+//            }
 
         }
 
@@ -54,9 +65,14 @@ class DocumentPreviewComponent extends Component
             $mailmerge = new \Homeful\Mailmerge\Mailmerge();
 
 //            dd($this->record->document->getPath(),storage_path('app/public/test1.docx'));
-
+//            dd(pathinfo($this->record->document->getPath(), PATHINFO_FILENAME));
+//            dd(json_decode($this->record->data,true));
             try{
-                $converted_path =$mailmerge->generateDocument($this->record->document->getPath(), json_decode($this->record->data, true), 'test', 'public', false);
+                $converted_path =$mailmerge->generateDocument($this->record->document->getPath(),
+                    json_decode($this->record->data,true),
+                    pathinfo($this->record->document->getPath(), PATHINFO_FILENAME),
+                    'public',
+                    false);
             }catch (\Exception $e){
                 dd($e, $e->getMessage());
             }
