@@ -14,6 +14,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\File;
 
+
 class DocumentPreviewComponent extends Component
 {
 
@@ -66,6 +67,7 @@ class DocumentPreviewComponent extends Component
 
 //            dd($this->record->document->getPath(),storage_path('app/public/test1.docx'));
 //            dd(pathinfo($this->record->document->getPath(), PATHINFO_FILENAME));
+//            dd(json_decode($this->record->data,true));
 //            dd(json_decode($this->record->data,true));
             try{
                 $converted_path =$mailmerge->generateDocument($this->record->document->getPath(),
