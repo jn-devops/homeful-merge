@@ -84,14 +84,15 @@ class TemplateResource extends Resource
 //                            ->required(),
 
                     ])->columns(1)->columnSpan(3),
-                    Forms\Components\Section::make()->schema([
-                        FilamentJsonColumn::make('data')->columnSpan(3),
-                        Livewire::make(DocumentPreviewComponent::class)
-                            ->key(Carbon::now()->format('Y-m-d H:i:s'))
-                            ->columnSpan(9),
-                    ])->columnSpan(9)->columns(12),
+                        FilamentJsonColumn::make('data')->columnSpan(9),
+//                    Forms\Components\Section::make()->schema([
+//
+//                    ])->columnSpan(9)->columns(9),
 
                 ])->columns(12)->columnSpanFull(),
+                Livewire::make(DocumentPreviewComponent::class)
+                    ->key(Carbon::now()->format('Y-m-d H:i:s'))
+                    ->columnSpanFull(),
 //                Livewire::make(DocumentPreviewComponent::class)
 //                    ->key(Carbon::now()->format('Y-m-d H:i:s'))
 //                    ->columnSpanFull(),
