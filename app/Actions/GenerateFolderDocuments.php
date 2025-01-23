@@ -5,6 +5,7 @@ namespace App\Actions;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Illuminate\Support\Facades\Validator;
+use App\Events\FolderDocumentsGenerated;
 use App\Models\{Folder, Set, Template};
 use Homeful\Mailmerge\Mailmerge;
 use Illuminate\Support\Arr;
@@ -27,21 +28,22 @@ class GenerateFolderDocuments
      */
     protected function generate(Set $set, array $validated): Folder
     {
-        $folder = app(Folder::class)->create($validated);
+        $folder = app(Folder::class)->create(array_merge($validated, ['set_code' => $set->code]));
         if ($folder instanceof Folder) {
             $data = Arr::get($validated, 'data');
             $set->templates->each(function (Template $template) use ($folder, $data) {
                 $template->document = $template->url;//TODO: improve ternary
                 if ($template->document instanceof Media) {
-                    $file = $this->merge->generateDocument(
+                    $folder->addDocument(file: $this->merge->generateDocument(
                         filePath: $template->document->getPath(),
                         arrInput: $data,
                         filename: $template->name
-                    );
-                    $folder->addDocument(file: $file);
+                    ));
                 }
             });
             $folder->refresh();
+
+            FolderDocumentsGenerated::dispatchif($folder->documents->count() > 0, $folder);
         }
 
         return $folder;
@@ -67,8 +69,8 @@ class GenerateFolderDocuments
     public function rules(): array
     {
         return [
-            'code' => ['required', 'string'],
-            'data' => ['required', 'array'],
+            'code' => ['required', 'string'],//contract code (if reference code, better)
+            'data' => ['required', 'array'],//contract data
             'meta' => ['nullable', 'array'],
         ];
     }

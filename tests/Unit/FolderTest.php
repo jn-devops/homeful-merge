@@ -10,6 +10,19 @@ test('folder model has attributes', function () {
     $folder = Folder::factory()->create();
     expect($folder->id)->toBeUuid();
     expect($folder->code)->toBeString();
+    expect($folder->set_code)->toBeString();
+    expect($folder->data)->toBeArray();
+});
+
+test('folder model can set set_code and data attributes', function () {
+    $folder = Folder::factory()->create(['set_code' => null, 'data' => null]);
+    expect($folder->set_code)->toBeNull();
+    expect($folder->data)->toBeNull();
+    $set_code = fake()->word();
+    $data = fake()->rgbColorAsArray();
+    $folder->update(compact('set_code', 'data'));
+    expect($folder->set_code)->toBe($set_code);
+    expect($folder->data)->toBe($data);
 });
 
 dataset('template_1', function () {

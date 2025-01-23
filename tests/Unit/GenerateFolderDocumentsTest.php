@@ -1,11 +1,20 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Actions\GenerateFolderDocuments;
+use App\Events\FolderDocumentsGenerated;
 use App\Models\{Folder, Set, Template};
+use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class, WithFaker::class);
+
+$contract_code = fake()->uuid();
+$set_code = fake()->word();
+
+afterAll(function () {
+    app(Template::class)->clearMediaCollection(Template::COLLECTION_NAME);
+    app(Folder::class)->clearMediaCollection(Folder::COLLECTION_NAME);
+});
 
 dataset('data', function () {
    return [
@@ -43,8 +52,6 @@ dataset('data', function () {
    ];
 });
 
-$set_code = 'ABC';
-
 dataset('set', function () use ($set_code) {
     return [
         [fn() => tap(Set::factory()->create(['code' => $set_code]), function (Set $set) {
@@ -59,14 +66,49 @@ dataset('set', function () use ($set_code) {
     ];
 });
 
-test('generate folder documents action works', function (Set $set, array $data) use ($set_code) {
+test('generate folder documents action works', function (Set $set, array $data) use ($contract_code, $set_code) {
+    Event::fake(FolderDocumentsGenerated::class);
     $action = app(GenerateFolderDocuments::class);
     $folder = $action->run($set, [
-        'code' => $set_code,
+        'code' => $contract_code,
         'data' => $data
     ]);
     if ($folder instanceof Folder) {
+        expect($folder->code)->toBe($contract_code);
+        expect($folder->set_code)->toBe($set->code);
+        expect($folder->data)->toBe($data);
         expect($folder->documents)->toHaveCount(1);
+        $folder->documents->each(function (Spatie\MediaLibrary\MediaCollections\Models\Media $document) {
+            $document->delete();
+        });
     }
+    Event::assertDispatched(FolderDocumentsGenerated::class, function (FolderDocumentsGenerated $event) use($folder) {
+        return $event->folder->is($folder);
+    });
+    $set->templates->each(function (Template $template) {
+        $template->document->delete();
+    });
+})->with('set', 'data' );
 
+test('generate folder documents end points works', function (Set $set, array $data) use ($contract_code, $set_code) {
+    Event::fake(FolderDocumentsGenerated::class);
+    $payload = ['code' => $contract_code, 'data' => $data];
+    $response = $this->post(route('folder-documents', ['set' => $set->code]), $payload);
+    expect($response->status())->toBe(201);
+    expect($response->json('data.code'))->toBe($contract_code);
+    $folder = app(Folder::class)->where('code', $contract_code)->first();
+    if ($folder instanceof Folder) {
+        expect($folder->set_code)->toBe($set->code);
+        expect(array_filter($folder->data))->toBe(array_filter($data));
+        expect($folder->documents)->toHaveCount(1);
+        $folder->documents->each(function (Spatie\MediaLibrary\MediaCollections\Models\Media $document) {
+            $document->delete();
+        });
+    }
+    Event::assertDispatched(FolderDocumentsGenerated::class, function (FolderDocumentsGenerated $event) use($folder) {
+        return $event->folder->is($folder);
+    });
+    $set->templates->each(function (Template $template) {
+        $template->document->delete();
+    });
 })->with('set', 'data' );
