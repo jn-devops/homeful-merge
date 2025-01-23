@@ -20,6 +20,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use PhpOffice\PhpWord\Style\Section;
 use ValentinMorice\FilamentJsonColumn\FilamentJsonColumn;
@@ -46,6 +47,13 @@ class TemplateResource extends Resource
                         Forms\Components\TextInput::make('url')
                             ->url()
                             ->maxLength(255)
+                            ->required(),
+                        Forms\Components\Select::make('fields')
+                            ->relationship('fields', 'name')
+                            ->preload()
+                            ->native(false)
+                            ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->name} : {$record->type}")
+                            ->multiple()
                             ->required(),
 //                        Forms\Components\Select::make('company_code')
 //                            ->label('Company')
@@ -74,37 +82,7 @@ class TemplateResource extends Resource
 //                                ]
 //                            )->native(false)
 //                            ->required(),
-                        Forms\Components\Repeater::make('fields')
-                            ->relationship('fields', )
-                            ->schema([
-                                TextInput::make('name')
-                                    ->required(),
-                                Forms\Components\Select::make('type')
-                                ->label('Type')
-                                    ->required()
-                                ->options([
-                                    'Integer' => 'Integer',
-                                    'String' => 'String',
-                                    'Text' => 'Text',
-                                    'Boolean' => 'Boolean',
-                                    'Float' => 'Float',
-                                    'Double' => 'Double',
-                                    'Decimal' => 'Decimal',
-                                    'Array' => 'Array',
-                                    'Object' => 'Object',
-                                    'JSON' => 'JSON',
-                                    'Date' => 'Date',
-                                    'DateTime' => 'DateTime',
-                                    'Time' => 'Time',
-                                    'Timestamp' => 'Timestamp',
-                                    'Binary' => 'Binary',
-                                    'Blob' => 'Blob',
-                                    'UUID' => 'UUID',
-                                ])
-                                ->native(false),
-                            ])
-                            ->columns(2)
-                            ->columnSpanFull()
+
                     ])->columns(1)->columnSpan(3),
                     Forms\Components\Section::make()->schema([
                         FilamentJsonColumn::make('data')->columnSpan(3),
