@@ -6,15 +6,14 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\MediaCollections\File;
 use Illuminate\Support\Facades\Storage;
 
-trait HasDocument
+trait HasMultipleDocuments
 {
     /**
-     * Documents should always point to a single file.
+     * Add to collection.
      */
     protected function addDocumentsCollection(): void
     {
         $this->addMediaCollection(self::COLLECTION_NAME)
-            ->singleFile()
             ->acceptsFile(function(File $file) {
                 return in_array(needle: $file->mimeType, haystack: self::DOCUMENT_MIME_TYPES);
             });
@@ -31,33 +30,17 @@ trait HasDocument
         $file = file_exists($file) ? $file : Storage::path($file);
 
         return $this->addMedia(file: $file)
-            ->usingName('document')
+            ->sanitizingFileName(function($fileName) {
+                return strtolower(str_replace(['#', '/', '\\', ' '], '-', $fileName));
+            })
             ->toMediaCollection(self::COLLECTION_NAME);
     }
 
     /**
-     * @param string|null $url
-     * @return HasDocument|\App\Models\Template
-     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded
-     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
-     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     * @return \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection
      */
-    public function setDocumentAttribute(?string $url): self
+    public function getDocuments(): \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection
     {
-        if ($url) {
-            $this->addMediaFromUrl($url)
-                ->usingName('document')
-                ->toMediaCollection(self::COLLECTION_NAME);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Media|null
-     */
-    public function getDocumentAttribute(): ?Media
-    {
-        return $this->getFirstMedia(self::COLLECTION_NAME);
+        return $this->getMedia(self::COLLECTION_NAME);
     }
 }

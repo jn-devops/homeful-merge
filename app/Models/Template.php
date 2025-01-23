@@ -37,6 +37,23 @@ class Template extends Model implements HasMedia
         'data'
     ];
 
+    /**
+     * This is the pointer to the collection.
+     *
+     * @var string
+     */
+    const COLLECTION_NAME = 'template-documents';
+
+    /**
+     * This is applicable to .pdf and .docx only.
+     *
+     * @var array
+     */
+    const DOCUMENT_MIME_TYPES = [
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+
     public function fields(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Field::class);

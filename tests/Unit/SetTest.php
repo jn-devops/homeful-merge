@@ -5,7 +5,7 @@ use App\Models\{Set, Template};
 
 uses(RefreshDatabase::class, WithFaker::class);
 
-test('template model has attributes', function () {
+test('set model has attributes', function () {
     $template = Set::factory()->create();
     expect($template->code)->toBeString();
     expect($template->name)->toBeString();
