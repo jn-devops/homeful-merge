@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $id
  * @property string $code
  * @property string $name
+ * @property Collection $templates
  *
  * @method int getKey()
  *
@@ -26,6 +28,11 @@ class Set extends Model
         'code',
         'name',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'code';
+    }
 
     public function templates(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

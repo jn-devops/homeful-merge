@@ -58,7 +58,7 @@ it('has mailmerge', function () {
     expect($folder->documents)->toHaveCount(0);
 
     $mailmerge = new \Homeful\Mailmerge\Mailmerge();
-    $converted_path1 = $mailmerge->generateDocument(filePath: $template_path, arrInput: $data, filename: $template_filename . '1', disk: 'public', download: false);
+    $converted_path1 = $mailmerge->generateDocument(filePath: $template_path, arrInput: $data, filename: $template_filename . '1');
     $converted_path2 = $mailmerge->generateDocument(filePath: $template_path, arrInput: $data, filename: $template_filename . '2', disk: 'public', download: false);
 
     expect(file_exists($converted_path1))->toBeTrue();
