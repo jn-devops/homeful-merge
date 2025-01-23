@@ -17,10 +17,11 @@ use Spatie\MediaLibrary\HasMedia;
  * @property string $id
  * @property string $code
  * @property array $meta
+ * @property \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection $documents
  *
  * @method int getKey()
  * @method Media addDocument(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file)
- * @method MediaCollection getDocuments()
+ * @method \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection getDocuments()
  *
  */
 class Folder extends Model implements HasMedia
@@ -40,6 +41,9 @@ class Folder extends Model implements HasMedia
         'meta' => 'array'
     ];
 
+    protected $appends = [
+        'documents'
+    ];
     /**
      * This is the pointer to the collection.
      *
@@ -55,4 +59,9 @@ class Folder extends Model implements HasMedia
     const DOCUMENT_MIME_TYPES = [
         'application/pdf',
     ];
+
+    public function getDocumentsAttribute(): \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection
+    {
+        return $this->getDocuments();
+    }
 }

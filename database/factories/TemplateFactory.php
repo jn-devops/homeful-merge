@@ -19,7 +19,8 @@ class TemplateFactory extends Factory
         return [
             'code' => $this->faker->word(),
             'name' => $this->faker->word(),
-            'url' => $this->faker->url()
+            'url' => $this->faker->url(),
+            'data' => json_encode($this->faker->rgbColorAsArray())
         ];
     }
 }
