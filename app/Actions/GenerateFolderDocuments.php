@@ -28,8 +28,11 @@ class GenerateFolderDocuments
      */
     protected function generate(Set $set, array $validated): Folder
     {
-        $folder = app(Folder::class)->create(array_merge($validated, ['set_code' => $set->code]));
+        $key = Arr::only($validated, 'code');
+        $attributes = array_merge($validated, ['set_code' => $set->code]);
+        $folder = app(Folder::class)->updateOrCreate($key, $attributes);
         if ($folder instanceof Folder) {
+            $folder->removeDocuments();
             $data = Arr::get($validated, 'data');
             $set->templates->each(function (Template $template) use ($folder, $data) {
                 $template->document = $template->url;//TODO: improve ternary

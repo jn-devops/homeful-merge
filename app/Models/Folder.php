@@ -23,7 +23,7 @@ use Spatie\MediaLibrary\HasMedia;
  * @method int getKey()
  * @method Media addDocument(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file)
  * @method \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection getDocuments()
- *
+ * @method int removeDocuments()
  */
 class Folder extends Model implements HasMedia
 {

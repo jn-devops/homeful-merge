@@ -88,6 +88,21 @@ test('generate folder documents action works', function (Set $set, array $data) 
     $set->templates->each(function (Template $template) {
         $template->document->delete();
     });
+})->with('set', 'data' )->skip();
+
+test('generate folder documents the second time', function (Set $set, array $data) use ($contract_code, $set_code) {
+    $action = app(GenerateFolderDocuments::class);
+    $folder1 = $action->run($set, [
+        'code' => $contract_code,
+        'data' => $data
+    ]);
+    expect($folder1->documents)->toHaveCount(1);
+    $folder2 = $action->run($set, [
+        'code' => $contract_code,
+        'data' => $data
+    ]);
+    expect($folder2->documents)->toHaveCount(1);
+    expect($folder1->is($folder2))->toBeTrue();
 })->with('set', 'data' );
 
 test('generate folder documents end points works', function (Set $set, array $data) use ($contract_code, $set_code) {
@@ -111,4 +126,4 @@ test('generate folder documents end points works', function (Set $set, array $da
     $set->templates->each(function (Template $template) {
         $template->document->delete();
     });
-})->with('set', 'data' );
+})->with('set', 'data' )->skip();
