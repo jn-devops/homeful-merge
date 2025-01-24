@@ -18,7 +18,8 @@ class FolderFactory extends Factory
     {
         return [
             'code' => $this->faker->word(),
-            'meta' => $this->faker->rgbColorAsArray()
+            'set_code' => $this->faker->word(),
+            'data' => $this->faker->rgbColorAsArray()
         ];
     }
 }

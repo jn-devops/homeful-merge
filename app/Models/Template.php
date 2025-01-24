@@ -17,6 +17,7 @@ use App\Traits\HasDocument;
  * @property string $code
  * @property string $name
  * @property string $url
+ * @property string $data
  * @property ?Media $document
  *
  * @method int getKey()

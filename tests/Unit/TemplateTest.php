@@ -11,6 +11,7 @@ test('template model has attributes', function () {
     expect($template->code)->toBeString();
     expect($template->name)->toBeString();
     expect($template->url)->toBeString();
+    expect($template->data)->toBeString();
 });
 
 test('template model has many field models', function () {

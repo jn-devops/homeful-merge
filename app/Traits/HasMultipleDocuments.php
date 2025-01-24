@@ -43,4 +43,18 @@ trait HasMultipleDocuments
     {
         return $this->getMedia(self::COLLECTION_NAME);
     }
+
+    /**
+     * @return int
+     */
+    public function removeDocuments(): int
+    {
+        $count = 0;
+        $this->documents->each(function ($medium) use (&$count) {
+            $medium->delete();
+            $count++;
+        });
+
+        return $count;
+    }
 }
