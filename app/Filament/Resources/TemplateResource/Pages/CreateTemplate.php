@@ -14,7 +14,8 @@ class CreateTemplate extends CreateRecord
         $model =static::getModel()::create($data);
         $model->document = $model->url;
         $model->fields = $data['fields']??[];
-        $model->data = $data['data']??[];
+
+        $model->data = $data['data']??"[]";
         return $model;
     }
 }

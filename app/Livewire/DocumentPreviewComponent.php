@@ -71,7 +71,7 @@ class DocumentPreviewComponent extends Component
 //            dd(json_decode($this->record->data,true));
             try{
                 $converted_path =$mailmerge->generateDocument($this->record->document->getPath(),
-                    json_decode($this->record->data,true),
+                    json_decode($this->record->data,true)??[],
                     pathinfo($this->record->document->getPath(), PATHINFO_FILENAME),
                     'public',
                     false);
