@@ -11,10 +11,11 @@ class GetFolderDocumentsController extends Controller
 {
     public function __construct(public GenerateFolderDocuments $action){}
 
-    public function __invoke(Set $set, Request $request): FolderResource
+    public function __invoke(Set $set, Request $request)
     {
         $folder = $this->action->run($set, $request->all());
 
-        return new FolderResource($folder);
+        return $folder;
+//        return new FolderResource($folder);
     }
 }

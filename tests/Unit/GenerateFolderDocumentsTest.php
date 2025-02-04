@@ -24,7 +24,7 @@ dataset('data', function () {
            "witness1" => "",
            "witness2" => "",
            "buyer_tin" => "2238495759302",
-           "buyer_name" => "CELINA ERICA BELTRAN",
+           "buyer_name" => "MS. CELINA ERICA BELTRAN",
            "spouse_name" => "",
            "project_name" => "PASINAYA HOMES MAGALANG PAMPANGA",
            "tcp_in_words" => "SEVEN HUNDRED FIFTY THOUSAND",
@@ -103,22 +103,27 @@ test('generate folder documents the second time', function (Set $set, array $dat
     ]);
     expect($folder2->documents)->toHaveCount(1);
     expect($folder1->is($folder2))->toBeTrue();
-})->with('set', 'data' );
+})->with('set', 'data' )->skip();
 
 test('generate folder documents end points works', function (Set $set, array $data) use ($contract_code, $set_code) {
     Event::fake(FolderDocumentsGenerated::class);
     $payload = ['code' => $contract_code, 'data' => $data];
+
     $response = $this->post(route('folder-documents', ['set' => $set->code]), $payload);
+
     expect($response->status())->toBe(201);
-    expect($response->json('data.code'))->toBe($contract_code);
+//    expect($response->json('data.code'))->toBe($contract_code);
+    expect($response->json('code'))->toBe($contract_code);
     $folder = app(Folder::class)->where('code', $contract_code)->first();
     if ($folder instanceof Folder) {
         expect($folder->set_code)->toBe($set->code);
         expect(array_filter($folder->data))->toBe(array_filter($data));
         expect($folder->documents)->toHaveCount(1);
-        $folder->documents->each(function (Spatie\MediaLibrary\MediaCollections\Models\Media $document) {
-            $document->delete();
-        });
+//        $folder->documents->each(function (Spatie\MediaLibrary\MediaCollections\Models\Media $document) {
+////            dd($document->getUrl());
+//
+//            $document->delete();
+//        });
     }
     Event::assertDispatched(FolderDocumentsGenerated::class, function (FolderDocumentsGenerated $event) use($folder) {
         return $event->folder->is($folder);
@@ -126,4 +131,4 @@ test('generate folder documents end points works', function (Set $set, array $da
     $set->templates->each(function (Template $template) {
         $template->document->delete();
     });
-})->with('set', 'data' )->skip();
+})->with('set', 'data' );

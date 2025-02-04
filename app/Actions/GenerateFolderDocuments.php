@@ -9,6 +9,7 @@ use App\Events\FolderDocumentsGenerated;
 use App\Models\{Folder, Set, Template};
 use Homeful\Mailmerge\Mailmerge;
 use Illuminate\Support\Arr;
+use App\Data\FolderData;
 
 class GenerateFolderDocuments
 {
@@ -22,11 +23,11 @@ class GenerateFolderDocuments
     /**
      * @param Set $set
      * @param array $validated
-     * @return Folder
+     * @return FolderData
      * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
      * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
      */
-    protected function generate(Set $set, array $validated): Folder
+    protected function generate(Set $set, array $validated)
     {
         try {
             $key = Arr::only($validated, 'code');
@@ -52,8 +53,9 @@ class GenerateFolderDocuments
                 FolderDocumentsGenerated::dispatchif($folder->documents->count() > 0, $folder);
             }
 
-            return $folder;
-        }catch (\Exception $exception){
+            return FolderData::fromModel($folder);
+
+        } catch (\Exception $exception){
             throw $exception;
         }
     }
@@ -61,11 +63,11 @@ class GenerateFolderDocuments
     /**
      * @param Set $set
      * @param array $attribs
-     * @return Folder
+     * @return FolderData
      * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
      * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
      */
-    public function handle(Set $set, array $attribs): Folder
+    public function handle(Set $set, array $attribs): FolderData
     {
         $validated = Validator::validate($attribs, $this->rules());
 

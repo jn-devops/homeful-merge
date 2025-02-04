@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -19,6 +20,7 @@ use Spatie\MediaLibrary\HasMedia;
  * @property string $set_code
  * @property array $data
  * @property \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection $documents
+ * @property array $generatedFiles
  *
  * @method int getKey()
  * @method Media addDocument(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file)
@@ -112,5 +114,23 @@ class Folder extends Model implements HasMedia
     public function getDocumentsAttribute(): \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection
     {
         return $this->getDocuments();
+    }
+
+    public function getGeneratedFilesAttribute(): array
+    {
+        return collect($this->media)
+            ->mapWithKeys(function ($item, $key) {
+                $collection_name = $item['collection_name'];
+                $name = Str::camel(Str::singular($collection_name));
+                $url = $item['original_url'];
+
+                return [
+                    $key => [
+                        'name' => $name,
+                        'url' => $url,
+                    ],
+                ];
+            })
+            ->toArray();
     }
 }

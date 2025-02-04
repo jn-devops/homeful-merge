@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Models\{Folder, Set, Template};
+use App\Data\FolderData;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -60,6 +61,8 @@ test('folder model adds template document path', function (Template $template_1,
     $folder->getDocuments()->each(function (Media $media) use (&$array) {
         $array [] = $media->getPath();
     });
+//    dd($folder->toArray());
+    dd(FolderData::fromModel($folder));
     expect(file_exists($array[0]))->toBeTrue();
     expect(file_exists($array[1]))->toBeTrue();
     $folder->clearMediaCollection(Folder::COLLECTION_NAME);
