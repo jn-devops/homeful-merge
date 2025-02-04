@@ -62,7 +62,7 @@ test('folder model adds template document path', function (Template $template_1,
         $array [] = $media->getPath();
     });
 //    dd($folder->toArray());
-    dd(FolderData::fromModel($folder));
+//    dd(FolderData::fromModel($folder));
     expect(file_exists($array[0]))->toBeTrue();
     expect(file_exists($array[1]))->toBeTrue();
     $folder->clearMediaCollection(Folder::COLLECTION_NAME);

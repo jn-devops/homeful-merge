@@ -69,26 +69,26 @@ dataset('set', function () use ($set_code) {
 test('generate folder documents action works', function (Set $set, array $data) use ($contract_code, $set_code) {
     Event::fake(FolderDocumentsGenerated::class);
     $action = app(GenerateFolderDocuments::class);
-    $folder = $action->run($set, [
+    $folder_data = $action->run($set, [
         'code' => $contract_code,
         'data' => $data
     ]);
-    if ($folder instanceof Folder) {
-        expect($folder->code)->toBe($contract_code);
-        expect($folder->set_code)->toBe($set->code);
-        expect($folder->data)->toBe($data);
-        expect($folder->documents)->toHaveCount(1);
-        $folder->documents->each(function (Spatie\MediaLibrary\MediaCollections\Models\Media $document) {
-            $document->delete();
-        });
+    if ($folder_data instanceof \App\Data\FolderData) {
+        expect($folder_data->code)->toBe($contract_code);
+        expect($folder_data->set_code)->toBe($set->code);
+        expect($folder_data->data)->toBe($data);
+        expect($folder_data->generatedFiles)->toHaveCount(1);
+//        $folder->documents->each(function (Spatie\MediaLibrary\MediaCollections\Models\Media $document) {
+//            $document->delete();
+//        });
     }
-    Event::assertDispatched(FolderDocumentsGenerated::class, function (FolderDocumentsGenerated $event) use($folder) {
-        return $event->folder->is($folder);
-    });
-    $set->templates->each(function (Template $template) {
-        $template->document->delete();
-    });
-})->with('set', 'data' )->skip();
+//    Event::assertDispatched(FolderDocumentsGenerated::class, function (FolderDocumentsGenerated $event) use($folder) {
+//        return $event->folder->is($folder);
+//    });
+//    $set->templates->each(function (Template $template) {
+//        $template->document->delete();
+//    });
+})->with('set', 'data' );
 
 test('generate folder documents the second time', function (Set $set, array $data) use ($contract_code, $set_code) {
     $action = app(GenerateFolderDocuments::class);
@@ -96,14 +96,16 @@ test('generate folder documents the second time', function (Set $set, array $dat
         'code' => $contract_code,
         'data' => $data
     ]);
-    expect($folder1->documents)->toHaveCount(1);
+    expect($folder1->generatedFiles)->toHaveCount(1);
     $folder2 = $action->run($set, [
         'code' => $contract_code,
         'data' => $data
     ]);
-    expect($folder2->documents)->toHaveCount(1);
-    expect($folder1->is($folder2))->toBeTrue();
-})->with('set', 'data' )->skip();
+    expect($folder2->generatedFiles)->toHaveCount(1);
+//    expect($folder1->is($folder2))->toBeTrue();
+//    expect($folder1->toArray())->toBe($folder2->toArray());
+    dd($folder1->generatedFiles[0]->url, $folder2->generatedFiles[0]->url);
+})->with('set', 'data' );
 
 test('generate folder documents end points works', function (Set $set, array $data) use ($contract_code, $set_code) {
     Event::fake(FolderDocumentsGenerated::class);

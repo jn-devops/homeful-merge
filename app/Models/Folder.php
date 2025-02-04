@@ -118,7 +118,7 @@ class Folder extends Model implements HasMedia
 
     public function getGeneratedFilesAttribute(): array
     {
-        return collect($this->media)
+        return collect($this->documents)
             ->mapWithKeys(function ($item, $key) {
                 $collection_name = $item['collection_name'];
                 $name = Str::camel(Str::singular($collection_name));

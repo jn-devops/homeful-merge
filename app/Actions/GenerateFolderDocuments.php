@@ -34,7 +34,7 @@ class GenerateFolderDocuments
             $attributes = array_merge($validated, ['set_code' => $set->code]);
             $folder = app(Folder::class)->updateOrCreate($key, $attributes);
             if ($folder instanceof Folder) {
-//                $folder->removeDocuments();
+                $folder->removeDocuments();
                 $data = Arr::get($validated, 'data');
                 $set->templates->each(function (Template $template) use ($folder, $data) {
                     $template->document = $template->url;//TODO: improve ternary
@@ -42,9 +42,7 @@ class GenerateFolderDocuments
                         $folder->addDocument(file: $this->merge->generateDocument(
                             filePath: $template->document->getPath(),
                             arrInput: $data,
-                            filename: pathinfo($template->document->getPath(), PATHINFO_FILENAME),
-                            disk: 'public',
-                            download: false
+                            filename: pathinfo($template->document->getPath(), PATHINFO_FILENAME)
                         ));
                     }
                 });
