@@ -28,28 +28,34 @@ class GenerateFolderDocuments
      */
     protected function generate(Set $set, array $validated): Folder
     {
-        $key = Arr::only($validated, 'code');
-        $attributes = array_merge($validated, ['set_code' => $set->code]);
-        $folder = app(Folder::class)->updateOrCreate($key, $attributes);
-        if ($folder instanceof Folder) {
-            $folder->removeDocuments();
-            $data = Arr::get($validated, 'data');
-            $set->templates->each(function (Template $template) use ($folder, $data) {
-                $template->document = $template->url;//TODO: improve ternary
-                if ($template->document instanceof Media) {
-                    $folder->addDocument(file: $this->merge->generateDocument(
-                        filePath: $template->document->getPath(),
-                        arrInput: $data,
-                        filename: $template->name
-                    ));
-                }
-            });
-            $folder->refresh();
+        try {
+            $key = Arr::only($validated, 'code');
+            $attributes = array_merge($validated, ['set_code' => $set->code]);
+            $folder = app(Folder::class)->updateOrCreate($key, $attributes);
+            if ($folder instanceof Folder) {
+                $folder->removeDocuments();
+                $data = Arr::get($validated, 'data');
+                $set->templates->each(function (Template $template) use ($folder, $data) {
+                    $template->document = $template->url;//TODO: improve ternary
+                    if ($template->document instanceof Media) {
+                        $folder->addDocument(file: $this->merge->generateDocument(
+                            filePath: $template->document->getPath(),
+                            arrInput: $data,
+                            filename: pathinfo($template->document->getPath(), PATHINFO_FILENAME),
+                            disk: 'public',
+                            download: false
+                        ));
+                    }
+                });
+                $folder->refresh();
 
-            FolderDocumentsGenerated::dispatchif($folder->documents->count() > 0, $folder);
+                FolderDocumentsGenerated::dispatchif($folder->documents->count() > 0, $folder);
+            }
+
+            return $folder;
+        }catch (\Exception $exception){
+            throw $exception;
         }
-
-        return $folder;
     }
 
     /**
