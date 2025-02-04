@@ -122,7 +122,8 @@ class Folder extends Model implements HasMedia
             ->mapWithKeys(function ($item, $key) {
                 $collection_name = $item['collection_name'];
                 $name = Str::camel(Str::singular($collection_name));
-                $url = $item['original_url'];
+//                $url = $item['original_url'];
+                $url = $item->getUrl();
 
                 return [
                     $key => [
