@@ -38,9 +38,10 @@ class TemplateImporter extends Importer
                     foreach ($existingFields as $name => $id) {
                         FieldTemplate::updateOrCreate(['template_id' => $record->id,'field_id' => $id]);
                     }
+
                     $record->document = $record->url;
-                    $record->fields = $data['fields']??[];
-                    $record->data = $data['data']??"[]";
+                    $record->data = $record->data??"[]";
+                    $record->save();
                 })
                 ->rules(['required']),
 //            ImportColumn::make('data'),
@@ -56,9 +57,7 @@ class TemplateImporter extends Importer
             'url' => $this->data['url'],
         ]);
 
-        // Ensure the template is saved before adding relations
         $template->save();
-
         // Check if fields data is available
         if (!empty($this->data['fields'])) {
             $existingFields = Field::whereIn('name', $this->data['fields'])->pluck('id', 'name')->toArray();
@@ -72,10 +71,8 @@ class TemplateImporter extends Importer
         }
 
         $template->document = $template->url;
-        $template->fields = $data['fields']??[];
-
-        $template->data = $data['data']??"[]";
-
+        $template->data = $template->data??"[]";
+        $template->save();
 
         return $template;
 //        return new Template();
