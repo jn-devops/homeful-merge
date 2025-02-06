@@ -24,32 +24,55 @@ class TemplateImporter extends Importer
             ImportColumn::make('url')
                 ->requiredMapping()
                 ->rules(['required']),
-            ImportColumn::make('Fields')
+            ImportColumn::make('fields')
                 ->requiredMapping()
-                ->rules(['required', 'array']),
+                ->fillRecordUsing(function (Template $record, string $state): void {
+                    $fieldIds = Field::whereIn('name',explode(',',$state) )->pluck('id')->toArray();
+                    $record->fields()->sync($fieldIds);
+                })
+                ->rules(['required']),
 //            ImportColumn::make('data'),
         ];
     }
 
     public function resolveRecord(): ?Template
     {
-        $template = Template::firstOrNew([
-            'code' => $this->data['code'],
-            'name' => $this->data['name'],
-            'url' => $this->data['url'],
-        ]);
 
-        // Ensure the template is saved before adding relations
-        $template->save();
-
-        // Check if fields data is available
-        if (!empty($this->data['fields'])) {
-            $fieldIds = Field::whereIn('name', $this->data['fields'])->pluck('id')->toArray();
-            $template->fields()->sync($fieldIds);
-        }
-
-        return $template;
-//        return new Template();
+//        $template = Template::firstOrNew([
+//            'code' => $this->data['code'],
+//            'name' => $this->data['name'],
+//            'url' => $this->data['url'],
+//        ]);
+//
+//        // Ensure the template is saved before adding relations
+//        $template->save();
+//
+//        // Check if fields data is available
+//        if (!empty($this->data['fields'])) {
+//            $fieldIds = Field::whereIn('name',explode(',',$this->data['fields']) )->pluck('id')->toArray();
+//            $template->fields()->sync($fieldIds);
+//        }
+//
+//
+//        return $template;
+        return new Template();
+    }
+    protected function beforeSave(): void
+    {
+//        $template = Template::firstOrNew([
+//            'code' => $this->data['code'],
+//            'name' => $this->data['name'],
+//            'url' => $this->data['url'],
+//        ]);
+//
+//        // Ensure the template is saved before adding relations
+//        $template->save();
+//
+//        // Check if fields data is available
+//        if (!empty($this->data['fields'])) {
+//            $fieldIds = Field::whereIn('name',explode(',',$this->data['fields']) )->pluck('id')->toArray();
+//            $template->fields()->sync($fieldIds);
+//        }
     }
 
     public static function getCompletedNotificationBody(Import $import): string
