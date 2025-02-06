@@ -44,6 +44,13 @@ class TemplateResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->maxLength(255)
                             ->required(),
+                        Forms\Components\TextInput::make('title')
+                            ->maxLength(255)
+                            ->required(),
+                        Forms\Components\Textarea::make('remarks')
+                            ->rows(10)
+                            ->cols(10)
+                            ->required(),
                         Forms\Components\TextInput::make('url')
                             ->url()
                             ->maxLength(255)

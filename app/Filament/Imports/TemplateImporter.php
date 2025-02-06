@@ -22,6 +22,12 @@ class TemplateImporter extends Importer
             ImportColumn::make('name')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
+            ImportColumn::make('title')
+                ->requiredMapping()
+                ->rules(['required', 'max:255']),
+            ImportColumn::make('remarks')
+                ->requiredMapping()
+                ->rules(['required']),
             ImportColumn::make('url')
                 ->requiredMapping()
                 ->rules(['required']),
@@ -50,11 +56,13 @@ class TemplateImporter extends Importer
 
     public function resolveRecord(): ?Template
     {
-
         $template = Template::firstOrNew([
             'code' => $this->data['code'],
             'name' => $this->data['name'],
+            'title' => $this->data['title'],
             'url' => $this->data['url'],
+        ], [
+            'remarks' => $this->data['remarks'] ??''
         ]);
 
         $template->save();

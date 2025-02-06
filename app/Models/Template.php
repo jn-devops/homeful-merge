@@ -16,6 +16,8 @@ use App\Traits\HasDocument;
  * @property string $id
  * @property string $code
  * @property string $name
+ * @property string $title
+ * @property string $remarks
  * @property string $url
  * @property string $data
  * @property ?Media $document
@@ -34,6 +36,8 @@ class Template extends Model implements HasMedia
     protected $fillable = [
         'code',
         'name',
+        'title',
+        'remarks',
         'url',
         'data'
     ];
