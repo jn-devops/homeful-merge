@@ -3,6 +3,7 @@
 namespace App\Filament\Imports;
 
 use App\Models\Field;
+use App\Models\FieldTemplate;
 use App\Models\Template;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
@@ -26,9 +27,17 @@ class TemplateImporter extends Importer
                 ->rules(['required']),
             ImportColumn::make('fields')
                 ->requiredMapping()
-                ->fillRecordUsing(function (Template $record, string $state): void {
-                    $fieldIds = Field::whereIn('name',explode(',',$state) )->pluck('id')->toArray();
-                    $record->fields()->sync($fieldIds);
+                ->array(',')
+                ->ignoreBlankState()
+                ->fillRecordUsing(function (Template $record, array $state): void {
+                    $existingFields = Field::whereIn('name', $state)->pluck('id', 'name')->toArray();
+                    $missingFields = array_diff($state, array_keys($existingFields));
+                    foreach ($missingFields as $name) {
+                        $existingFields[$name] = Field::updateOrCreate(['name' => $name,'type'=>'String'])->id;
+                    }
+                    foreach ($existingFields as $name => $id) {
+                        FieldTemplate::updateOrCreate(['template_id' => $record->id,'field_id' => $id]);
+                    }
                 })
                 ->rules(['required']),
 //            ImportColumn::make('data'),
@@ -38,24 +47,30 @@ class TemplateImporter extends Importer
     public function resolveRecord(): ?Template
     {
 
-//        $template = Template::firstOrNew([
-//            'code' => $this->data['code'],
-//            'name' => $this->data['name'],
-//            'url' => $this->data['url'],
-//        ]);
-//
-//        // Ensure the template is saved before adding relations
-//        $template->save();
-//
-//        // Check if fields data is available
-//        if (!empty($this->data['fields'])) {
-//            $fieldIds = Field::whereIn('name',explode(',',$this->data['fields']) )->pluck('id')->toArray();
-//            $template->fields()->sync($fieldIds);
-//        }
-//
-//
-//        return $template;
-        return new Template();
+        $template = Template::firstOrNew([
+            'code' => $this->data['code'],
+            'name' => $this->data['name'],
+            'url' => $this->data['url'],
+        ]);
+
+        // Ensure the template is saved before adding relations
+        $template->save();
+
+        // Check if fields data is available
+        if (!empty($this->data['fields'])) {
+            $existingFields = Field::whereIn('name', $this->data['fields'])->pluck('id', 'name')->toArray();
+            $missingFields = array_diff($this->data['fields'], array_keys($existingFields));
+            foreach ($missingFields as $name) {
+                $existingFields[$name] = Field::updateOrCreate(['name' => $name,'type'=>'String'])->id;
+            }
+            foreach ($existingFields as $name => $id) {
+                FieldTemplate::updateOrCreate(['template_id' => $template->id,'field_id' => $id]);
+            }
+        }
+
+
+        return $template;
+//        return new Template();
     }
     protected function beforeSave(): void
     {
