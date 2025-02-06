@@ -38,6 +38,9 @@ class TemplateImporter extends Importer
                     foreach ($existingFields as $name => $id) {
                         FieldTemplate::updateOrCreate(['template_id' => $record->id,'field_id' => $id]);
                     }
+                    $record->document = $record->url;
+                    $record->fields = $data['fields']??[];
+                    $record->data = $data['data']??"[]";
                 })
                 ->rules(['required']),
 //            ImportColumn::make('data'),
@@ -67,6 +70,11 @@ class TemplateImporter extends Importer
                 FieldTemplate::updateOrCreate(['template_id' => $template->id,'field_id' => $id]);
             }
         }
+
+        $template->document = $template->url;
+        $template->fields = $data['fields']??[];
+
+        $template->data = $data['data']??"[]";
 
 
         return $template;
