@@ -104,7 +104,7 @@ test('generate folder documents the second time', function (Set $set, array $dat
     expect($folder2->generatedFiles)->toHaveCount(1);
 //    expect($folder1->is($folder2))->toBeTrue();
 //    expect($folder1->toArray())->toBe($folder2->toArray());
-    dd($folder1->generatedFiles[0]->url, $folder2->generatedFiles[0]->url);
+//    dd($folder1->generatedFiles[0]->url, $folder2->generatedFiles[0]->url);
 })->with('set', 'data' );
 
 test('generate folder documents end points works', function (Set $set, array $data) use ($contract_code, $set_code) {
@@ -112,7 +112,7 @@ test('generate folder documents end points works', function (Set $set, array $da
     $payload = ['code' => $contract_code, 'data' => $data];
 
     $response = $this->post(route('folder-documents', ['set' => $set->code]), $payload);
-
+dd($response,$response->json());
     expect($response->status())->toBe(201);
 //    expect($response->json('data.code'))->toBe($contract_code);
     expect($response->json('code'))->toBe($contract_code);

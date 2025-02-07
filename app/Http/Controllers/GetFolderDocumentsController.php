@@ -4,18 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Actions\GenerateFolderDocuments;
 use App\Http\Resources\FolderResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Set;
+use Throwable;
 
 class GetFolderDocumentsController extends Controller
 {
     public function __construct(public GenerateFolderDocuments $action){}
 
-    public function __invoke(Set $set, Request $request)
+    public function __invoke(Set $set, Request $request): JsonResponse
     {
-        $folder = $this->action->run($set, $request->all());
+        try {
+            $folder = $this->action->run($set, $request->all());
 
-        return $folder;
-//        return new FolderResource($folder);
+            return response()->json([
+                'success' => true,
+                'message' => 'Folder documents generated successfully.',
+                'data' => new FolderResource($folder),
+            ], 201);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate folder documents.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
