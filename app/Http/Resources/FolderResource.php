@@ -15,8 +15,9 @@ class FolderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'code' => $this->getAttribute('code'),
-            'documents' => $this->getAttribute('documents'),
+            'code' => $this->getAttribute('code')??'',
+//            'documents' => $this->getAttribute('documents')??[],
+            'data' => $this->getAttribute('data')??[],
         ];
     }
 }
