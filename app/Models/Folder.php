@@ -128,7 +128,6 @@ class Folder extends Model implements HasMedia
                     $name = Str::camel(Str::singular($collection_name));
 //                $url = $item['original_url'];
                 $url = $item->getUrl();
-                dd($name,$url);
                 return [
                     $key => [
                         'name' => $name,
