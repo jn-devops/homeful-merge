@@ -26,8 +26,7 @@ class TemplateImporter extends Importer
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
             ImportColumn::make('remarks')
-                ->requiredMapping()
-                ->rules(['required']),
+                ->requiredMapping(),
             ImportColumn::make('url')
                 ->requiredMapping()
                 ->rules(['required']),
