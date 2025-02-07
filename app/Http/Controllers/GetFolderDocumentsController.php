@@ -20,7 +20,7 @@ class GetFolderDocumentsController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Folder documents generated successfully.',
-                'data' => $folder['data'],
+                'data' => $folder->toArray()['data'],
             ], 201);
         } catch (Throwable $e) {
             return response()->json([
