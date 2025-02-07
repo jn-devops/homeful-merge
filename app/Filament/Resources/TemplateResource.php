@@ -52,8 +52,7 @@ class TemplateResource extends Resource
                             ->required(),
                         Forms\Components\Textarea::make('remarks')
                             ->rows(10)
-                            ->cols(10)
-                            ->required(),
+                            ->cols(10),
                         Forms\Components\TextInput::make('url')
                             ->url()
                             ->maxLength(255)
