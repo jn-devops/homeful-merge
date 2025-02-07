@@ -112,7 +112,6 @@ test('generate folder documents end points works', function (Set $set, array $da
     $payload = ['code' => $contract_code, 'data' => $data];
 
     $response = $this->post(route('folder-documents', ['set' => $set->code]), $payload);
-dd($response,$response->json());
     expect($response->status())->toBe(201);
 //    expect($response->json('data.code'))->toBe($contract_code);
     expect($response->json('code'))->toBe($contract_code);

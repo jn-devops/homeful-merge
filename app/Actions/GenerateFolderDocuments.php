@@ -42,7 +42,7 @@ class GenerateFolderDocuments
                         $folder->addDocument(file: $this->merge->generateDocument(
                             filePath: $template->document->getPath(),
                             arrInput: $data,
-                            filename: pathinfo($template->document->getPath(), PATHINFO_FILENAME)
+                            filename: $template->title
                         ));
                     }
                 });

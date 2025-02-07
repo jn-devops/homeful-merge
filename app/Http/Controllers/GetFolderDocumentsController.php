@@ -21,7 +21,7 @@ class GetFolderDocumentsController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Folder documents generated successfully.',
-                'data' => $folder->generatedFiles,
+                'documents' => $folder->generatedFiles,
             ], 201);
         } catch (Throwable $e) {
             return response()->json([
