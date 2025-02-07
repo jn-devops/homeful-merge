@@ -17,10 +17,11 @@ class GetFolderDocumentsController extends Controller
     {
         try {
             $folder = $this->action->run($set, $request->all());
+
             return response()->json([
                 'success' => true,
                 'message' => 'Folder documents generated successfully.',
-                'data' => $folder->toArray()['data'],
+                'data' => $folder->generatedFiles,
             ], 201);
         } catch (Throwable $e) {
             return response()->json([
