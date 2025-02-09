@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Folder;
 use App\Models\Set;
 use App\Models\Template;
 use Homeful\Mailmerge\Mailmerge;
@@ -36,6 +37,7 @@ class DocumentController extends Controller
     public function generateDocument(string $template_code,Request $request)
     {
         try {
+            $folder = app(Folder::class)->updateOrCreate($request->code, []);
             // Fetch the template
             $template = Template::firstWhere('code', $template_code);
 
@@ -55,16 +57,17 @@ class DocumentController extends Controller
                 ], 404);
             }
 
-            // Generate document
-            $document = $this->merge->generateDocument(
+
+           $document= $folder->addDocument(file: $this->merge->generateDocument(
                 filePath: $template->document->getPath(),
                 arrInput: $request->data,
                 filename: $template->title
-            );
+            ));
 
             return response()->json([
                 'success' => true,
-                'document' => $document
+                'name' => $document->name,
+                'url' =>  $document->url
             ]);
         } catch (\Exception $e) {
             return response()->json([
