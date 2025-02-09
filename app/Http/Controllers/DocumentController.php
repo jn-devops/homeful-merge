@@ -37,7 +37,7 @@ class DocumentController extends Controller
     public function generateDocument(string $template_code,Request $request)
     {
         try {
-            $folder = app(Folder::class)->updateOrCreate($request->code, []);
+            $folder = app(Folder::class)->updateOrCreate([$request->code], []);
             // Fetch the template
             $template = Template::firstWhere('code', $template_code);
 
