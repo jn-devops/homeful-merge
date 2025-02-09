@@ -37,7 +37,8 @@ class DocumentController extends Controller
     public function generateDocument(string $template_code,Request $request)
     {
         try {
-            $folder = app(Folder::class)->updateOrCreate([$request->code], []);
+
+            $folder = Folder::firstOrCreate(['code' => $template_code]);
             // Fetch the template
             $template = Template::firstWhere('code', $template_code);
 
@@ -67,7 +68,7 @@ class DocumentController extends Controller
             return response()->json([
                 'success' => true,
                 'name' => $document->name,
-                'url' =>  $document->url
+                'url' =>  $document->original_url,
             ]);
         } catch (\Exception $e) {
             return response()->json([
