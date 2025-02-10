@@ -16,6 +16,11 @@ class DocumentController extends Controller
      */
     public function __construct(public Mailmerge $merge){}
 
+    public function removeFolderContents(string $code):void{
+        $folder = Folder::firstOrCreate(['code' => $code]);
+        $folder->removeDocuments();
+    }
+
     public function templates(String $setCode): JsonResponse
     {
         try {
@@ -38,7 +43,7 @@ class DocumentController extends Controller
     {
         try {
 
-            $folder = Folder::firstOrCreate(['code' => $template_code]);
+            $folder = Folder::firstOrCreate(['code' => $request->code]);
             // Fetch the template
             $template = Template::firstWhere('code', $template_code);
 
