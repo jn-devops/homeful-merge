@@ -58,6 +58,7 @@ trait HasDocument
      */
     public function getDocumentAttribute(): ?Media
     {
-        return $this->getFirstMedia(self::COLLECTION_NAME);
+//        return $this->getFirstMedia(self::COLLECTION_NAME);
+        return $this->getMedia(self::COLLECTION_NAME)->last();
     }
 }

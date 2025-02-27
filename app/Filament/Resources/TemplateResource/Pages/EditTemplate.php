@@ -27,8 +27,6 @@ class EditTemplate extends EditRecord
     {
         $record->update($data);
         $record->document = $record->url;
-
-
         return $record;
     }
 }
